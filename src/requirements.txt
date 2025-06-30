@@ -4,4 +4,4 @@ drf-spectacular
 python-dotenv
 django-jazzmin
 psycopg2-binary
-gunicorn
+gunicorn>=21.2.0
