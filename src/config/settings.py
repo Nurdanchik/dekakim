@@ -63,9 +63,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'halal_db',
-        'USER': 'halal_user',
-        'PASSWORD': 'halal_password',
+        'NAME': 'dekakim_db',
+        'USER': 'dekakim_user',
+        'PASSWORD': 'dekakim_password',
         'HOST': 'postgres',  # имя сервиса из docker-compose
         'PORT': '5432',
     }
