@@ -10,7 +10,10 @@ SECRET_KEY = os.getenv("SECRET_KEY", "secret-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(',')
 ALLOWED_HOSTS = ["dekakim.net", "www.dekakim.net"]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://dekakim.net",
+    "https://www.dekakim.net",
+]
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -75,7 +78,8 @@ DATABASES = {
 TIME_ZONE = 'UTC'
 USE_TZ = True
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
