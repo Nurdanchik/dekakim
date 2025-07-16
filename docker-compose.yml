@@ -4,52 +4,61 @@ services:
   postgres:
     image: postgres:14
     restart: always
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
     environment:
-      POSTGRES_DB: dekakim_db
       POSTGRES_USER: dekakim_user
-      POSTGRES_PASSWORD: your_secure_password
+      POSTGRES_PASSWORD: dekakim_password
+      POSTGRES_DB: dekakim_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
 
   backend:
-    build: .
-    restart: always
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    command: |
+      /usr/local/bin/wait-for-it.sh postgres:5432 -- sh -c "
+      python manage.py migrate && \
+      python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='root').exists() or User.objects.create_superuser('root', 'root@example.com', 'root')\" && \
+      python manage.py collectstatic --no-input && \
+      gunicorn config.wsgi:application --bind 0.0.0.0:8000 --log-level info
+      "
+    volumes:
+      - ./src:/usr/src/app
+      - ./static:/static
+      - ./media:/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_NAME=dekakim_db
+      - DATABASE_USER=dekakim_user
+      - DATABASE_PASSWORD=dekakim_password
     depends_on:
       - postgres
-    volumes:
-      - static_volume:/usr/src/app/static/
-      - media_volume:/usr/src/app/media/
-    environment:
-      - DEBUG=0
-      - DJANGO_SUPERUSER_USERNAME=root
-      - DJANGO_SUPERUSER_PASSWORD=root
-      - DJANGO_SUPERUSER_EMAIL=root@example.com
-      - ALLOWED_HOSTS=dekakim.net,www.dekakim.net
-      - CSRF_TRUSTED_ORIGINS=https://dekakim.net https://www.dekakim.net
-    expose:
-      - 80
+    networks:
+      - backend_network
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.25
+    restart: always
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./static:/usr/src/app/static 
+      - ./media:/usr/src/app/media 
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot
     depends_on:
       - backend
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certbot/conf:/etc/letsencrypt:ro
-      - ./certbot/www:/var/www/certbot
-      - static_volume:/usr/src/app/static/
-      - media_volume:/usr/src/app/media/
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+    networks:
+      - backend_network
 
 volumes:
-  pgdata:
-  static_volume:
-  media_volume:
+  postgres_data:
+
+networks:
+  backend_network:

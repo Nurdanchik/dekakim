@@ -1,5 +1,5 @@
 from django.contrib import admin
-from products.models.product import Category, Product, Use, Feature
+from products.models.product import Category, Product, Use, Feature, Banner
 
 
 class UseInline(admin.TabularInline):
@@ -36,3 +36,5 @@ class UseAdmin(admin.ModelAdmin):
 class FeatureAdmin(admin.ModelAdmin):
     list_display = ['id', 'product', 'text']
     search_fields = ['text', 'product__product_name']
+
+admin.site.register(Banner)

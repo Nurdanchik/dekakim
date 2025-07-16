@@ -19,7 +19,7 @@ class Block(BaseModel):
     )
 
     title = models.CharField(
-        max_length=100,
+        max_length=1000000,
         unique=True,
         verbose_name='Post title'
     )

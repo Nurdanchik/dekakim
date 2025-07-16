@@ -7,7 +7,12 @@ class Category(BaseModel):
     Product category
     """
 
+    logo = models.ImageField(
+        upload_to='categories/logos/',
+        verbose_name='Category logo'
+    )
     name = models.CharField(max_length=100, unique=True, verbose_name='Category name')
+    description = models.TextField()
 
     def __str__(self):
         return self.name
@@ -34,10 +39,18 @@ class Product(BaseModel):
         verbose_name='Language'
     )
     face_img = models.ImageField(
-        upload_to='media/cards/faces/',
+        upload_to='cards/faces/',
         verbose_name='Main photo'
     )
     slogan = models.TextField(verbose_name='Slogan')
+    code = models.CharField(
+        max_length=20,
+        verbose_name='Product code'
+    )
+    subcode = models.CharField(
+        max_length=20,
+        verbose_name='Product subcode'
+    )
     product_name = models.CharField(
         max_length=100,
         unique=True,
@@ -99,3 +112,38 @@ class Feature(BaseModel):
     class Meta:
         verbose_name = 'Feature'
         verbose_name_plural = 'Features'
+
+
+
+class Banner(BaseModel):
+    """
+    Banner for a category
+    """
+
+    LANGUAGES = (
+        ('Eng', 'English'),
+        ('Tur', 'Turkish'),
+    )
+
+    language = models.CharField(
+        max_length=10,
+        choices=LANGUAGES,
+        default='Eng',
+        verbose_name='Language'
+    )
+    category = models.OneToOneField(
+        Category,
+        on_delete=models.CASCADE,
+        related_name='banner',
+        verbose_name='Category'
+    )
+    slogan = models.CharField(max_length=255, verbose_name='Slogan')
+    description = models.TextField(verbose_name='Description')
+    photo = models.ImageField(upload_to='banners/photos/', verbose_name='Photo')
+
+    def __str__(self):
+        return f"Banner for {self.category.name}"
+
+    class Meta:
+        verbose_name = 'Banner'
+        verbose_name_plural = 'Banners'
