@@ -54,7 +54,7 @@ class BlockPhoto(BaseModel):
         verbose_name='Block'
     )
     photo = models.ImageField(
-        upload_to='blocks/photos/',
+        upload_to='media/blocks/photos/',
         verbose_name='Photo'
     )
 
@@ -74,7 +74,7 @@ class BlockVideo(BaseModel):
         verbose_name='Block'
     )
     video = models.FileField(
-        upload_to='blocks/videos/',
+        upload_to='media/blocks/videos/',
         verbose_name='Video'
     )
 

@@ -18,7 +18,7 @@ class EmploymentApplication(BaseModel):
     )
     email = models.EmailField(verbose_name='Email', blank=True, null=True)
     cv = models.FileField(
-        upload_to='employees/cvs/',
+        upload_to='media/employees/cvs/',
         verbose_name='Resume (CV)'
     )
     message = models.TextField(
