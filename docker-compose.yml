@@ -50,6 +50,16 @@ services:
     networks:
       - backend_network
 
+  frontend:
+    container_name: frontend
+    image: digmen/dekakim:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - backend_network
+
+
   nginx:
     container_name: nginx
     image: nginx:1.25
