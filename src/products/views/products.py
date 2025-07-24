@@ -47,7 +47,7 @@ class CategoryWithProductsListAPIView(ListAPIView):
 
     def get_queryset(self):
         language = self.request.query_params.get('language')
-        return get_all_categories_with_products(language)
+        return get_all_categories_with_products(language=language)
 
 
 @extend_schema(

@@ -7,6 +7,18 @@ class Category(BaseModel):
     Product category
     """
 
+    LANGUAGES = (
+        ('Eng', 'English'),
+        ('Tur', 'Turkish'),
+    )
+
+    language = models.CharField(
+        max_length=10,
+        choices=LANGUAGES,
+        default='Eng',
+        verbose_name='Language'
+    )
+
     logo = models.ImageField(
         upload_to='media/categories/logos/',
         verbose_name='Category logo'

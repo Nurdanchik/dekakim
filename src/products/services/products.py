@@ -3,14 +3,16 @@ from django.db.models import Prefetch
 
 
 def get_all_categories_with_products(language=None):
+    categories = Category.objects.all()
     if language:
-        return Category.objects.prefetch_related(
+        categories = categories.filter(language=language)
+        return categories.prefetch_related(
             Prefetch(
                 'products',
                 queryset=Product.objects.filter(language=language)
             )
         )
-    return Category.objects.prefetch_related('products')
+    return categories.prefetch_related('products')
 
 
 def get_product_by_id(product_id: int):
