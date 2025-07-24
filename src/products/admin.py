@@ -21,9 +21,9 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     inlines = [UseInline, FeatureInline]
-    list_display = ('id', 'product_name', 'category')
+    list_display = ('id', 'product_name', 'category', 'language')  # добавлен language
     search_fields = ('product_name', 'description')
-    list_filter = ('category',)
+    list_filter = ('category', 'language')  # и фильтр по языку, если нужно
 
 
 @admin.register(Use)

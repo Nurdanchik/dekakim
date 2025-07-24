@@ -49,14 +49,18 @@ class Product(BaseModel):
     )
     subcode = models.CharField(
         max_length=20,
+        blank=True,
+        null=True,
         verbose_name='Product subcode'
     )
     product_name = models.CharField(
         max_length=100,
-        unique=True,
         verbose_name='Product name'
     )
-    description = models.TextField(verbose_name='Description')
+    description = models.TextField(
+        blank=True,
+        verbose_name='Description'
+    )
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
@@ -114,7 +118,6 @@ class Feature(BaseModel):
         verbose_name_plural = 'Features'
 
 
-
 class Banner(BaseModel):
     """
     Banner for a category
@@ -131,10 +134,10 @@ class Banner(BaseModel):
         default='Eng',
         verbose_name='Language'
     )
-    category = models.OneToOneField(
+    category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        related_name='banner',
+        related_name='banners',
         verbose_name='Category'
     )
     slogan = models.CharField(max_length=255, verbose_name='Slogan')
@@ -142,8 +145,9 @@ class Banner(BaseModel):
     photo = models.ImageField(upload_to='media/banners/photos/', verbose_name='Photo')
 
     def __str__(self):
-        return f"Banner for {self.category.name}"
+        return f"Banner for {self.category.name} ({self.language})"
 
     class Meta:
         verbose_name = 'Banner'
         verbose_name_plural = 'Banners'
+        unique_together = ('category', 'language')
